@@ -590,6 +590,8 @@ repmgr_initialize() {
             # Restart PostgreSQL
             postgresql_stop
             postgresql_start_bg
+            # Check the DNS is ready for this pod in k8s
+            wait_for_dns_lookup ${REPMGR_NODE_NETWORK_NAME} 30
             repmgr_register_primary
             # Allow running custom initialization scripts
             postgresql_custom_init_scripts
@@ -604,6 +606,8 @@ repmgr_initialize() {
         local -r psql_major_version="$(postgresql_get_major_version)"
         postgresql_configure_recovery
         postgresql_start_bg
+        # Check the DNS is ready for this pod in k8s
+        wait_for_dns_lookup ${REPMGR_NODE_NETWORK_NAME} 30
         repmgr_unregister_standby
         repmgr_register_standby
     fi
