@@ -19,6 +19,8 @@ readonly repmgr_flags=("--pid-file=$REPMGR_PID_FILE" "-f" "$REPMGR_CONF_FILE" "-
 readonly repmgr_cmd=$(command -v repmgrd)
 
 postgresql_start_bg
+info "** Wait for Service Ready **"
+until ping -c1 ${REPMGR_NODE_NETWORK_NAME} >/dev/null 2>&1; do :; done
 info "** Starting repmgrd **"
 # TODO: properly test running the container as root
 if am_i_root; then
